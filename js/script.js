@@ -105,6 +105,8 @@ let activityCost = 0;
 
 // when an activity is selected, the total cost adds up the cost of the selected
 activitiesFieldset.addEventListener('change', e => {
+
+    activityValidator();
     // pulls input of the clicked checkbox
     const clicked = e.target;
     // if the clicked type is a check box, pull the checkbox's data-cost and turn it into a number
@@ -189,6 +191,13 @@ const nameValidator = () => {
     const nameIsValid = /^[a-zA-Z]+ ?[a-zA-Z]*? ?[a-zA-Z]*?$/.test(nameValue);
     console.log(`Name validation test on "${nameValue}" evaluates to ${nameIsValid}`);
 
+
+    if (nameIsValid) {
+        validationPass(nameElement);
+    } else {
+        validationFail(nameElement);
+    }
+
     return nameIsValid;
 }
 
@@ -197,6 +206,12 @@ const emailValidator = () => {
     const emailIsValid = /^[^@]+@[^@.]+\.[a-z]+$/i.test(emailValue);
     console.log(`Email validation test on "${emailValue}" evaluates to ${emailIsValid}`);
 
+    if (email) {
+        validationPass(email);
+    } else {
+        validationFail(email);
+    }
+
     return emailIsValid;
 }
 
@@ -204,6 +219,13 @@ const activityValidator = () => {
     const activityIsValid = activityCost > 0;
 
     console.log(`Activity section validation test evaluates to ${activityIsValid}`);
+
+
+    if (activityIsValid) {
+        validationPass(activityCost);
+    } else {
+        validationFail(activityCost);
+    }
 
     return activityIsValid
 }
@@ -238,28 +260,60 @@ const ccValidator = () => {
 
     if (ccNum.value.length > 13 && ccNum.value.length < 16) {
         ccIsValid = true;
+        validationPass(ccNum);
     } else {
         ccIsValid = false;
         console.log("CC Num must be 13-16 digits")
+        validationFail(ccNum);
+        
     }
 
     if (zipCode.value.length !== 5) {
         ccIsValid = false;
         console.log("Zip Code must be 5 digits");
+        validationPass(zipCode);
+
     } else {
         ccIsValid = true
+        validationFail(zipCode);
+
     }
 
     if (cvv.value.length !== 3) {
         ccIsValid = false;
         console.log("CVV must be 3 digits")
+        validationPass(cvv);
+
     } else {
         ccIsValid = true;
+        validationFail(cvv);
+
     }
 
     return ccIsValid;
 
 }
+
+const validationPass = (element) => {
+    const elementParent = element.parentElement;
+    elementParent.classList.add('.valid');
+    elementParent.classList.remove('.not-valid');
+    elementParent.lastElementChild.display = 'none';
+}
+
+const validationFail = (element) => {
+    const elementParent = element.parentElement;
+    elementParent.classList.add('.not-valid');
+    elementParent.classList.remove('.valid');
+    elementParent.lastElementChild.display = 'block';
+}
+
+nameElement.addEventListener('keyup', nameValidator);
+email.addEventListener('keyup', emailValidator);
+ccNum.addEventListener('keyup', ccValidator);
+zipCode.addEventListener('keyup', ccValidator);
+cvv.addEventListener('keyup', ccValidator);
+
 
 form.addEventListener('submit', e => {
     
@@ -270,8 +324,5 @@ e.preventDefault();
     if (!ccValidator()){e.preventDefault()};
     console.log('Submit handler is functional!');
 
-    if (payment === "credit-card") {
-
-    }
-
 })
+
