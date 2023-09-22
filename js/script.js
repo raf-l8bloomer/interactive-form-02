@@ -126,9 +126,9 @@ activitiesFieldset.addEventListener('change', e => {
 // set Credit Card payment as default upon load
 // when user selects, form should display only the chosen payment method
 const paymentSelector = document.querySelector('#payment')
-console.log(payment);
 
-payment[1].setAttribute('selected', 'selected');
+paymentSelector[1].setAttribute('selected', true);
+console.log("Payment selected is", paymentSelector);
 
 const creditCard = document.querySelector('.credit-card');
 const creditYear = document.querySelector('.year-box');
@@ -136,6 +136,8 @@ const creditZip = document.querySelector('.zip-box');
 const creditCvv = document.querySelector('.cvv-box');
 const paypal = document.querySelector('.paypal');
 const bitcoin = document.querySelector('.bitcoin');
+
+let payment = "";
 
 paymentSelector.addEventListener('change', e => {
     const chosen = e.target.value;
@@ -152,6 +154,8 @@ paymentSelector.addEventListener('change', e => {
         creditCvv.hidden = false;
         paypal.hidden = true;
         bitcoin.hidden = true;
+        return payment = "credit-card";
+        console.log(payment);
     } else if (chosen === "paypal") {
         creditCard.hidden = true;
         creditYear.hidden= true;
@@ -159,6 +163,9 @@ paymentSelector.addEventListener('change', e => {
         creditCvv.hidden = true;
         paypal.hidden = false;
         bitcoin.hidden = true;
+        return payment = "paypal";
+        console.log(payment);
+
     } else if (chosen === "bitcoin") {
         creditCard.hidden = true;
         creditYear.hidden= true;
@@ -166,7 +173,105 @@ paymentSelector.addEventListener('change', e => {
         creditCvv.hidden = true;
         paypal.hidden = true;
         bitcoin.hidden = false;
+        return payment = "bitcoin";
+        console.log(payment);
+
     }
 })
 
 const form = document.querySelector('form');
+const nameElement = document.querySelector('#name');
+const email = document.querySelector('#email');
+// use activity cost for validation
+
+const nameValidator = () => {
+    const nameValue = nameElement.value;
+    const nameIsValid = /^[a-zA-Z]+ ?[a-zA-Z]*? ?[a-zA-Z]*?$/.test(nameValue);
+    console.log(`Name validation test on "${nameValue}" evaluates to ${nameIsValid}`);
+
+    return nameIsValid;
+}
+
+const emailValidator = () => {
+    const emailValue = email.value;
+    const emailIsValid = /^[^@]+@[^@.]+\.[a-z]+$/i.test(emailValue);
+    console.log(`Email validation test on "${emailValue}" evaluates to ${emailIsValid}`);
+
+    return emailIsValid;
+}
+
+const activityValidator = () => {
+    const activityIsValid = activityCost > 0;
+
+    console.log(`Activity section validation test evaluates to ${activityIsValid}`);
+
+    return activityIsValid
+}
+
+const ccNum = document.querySelector('#cc-num');
+const zipCode = document.querySelector('#zip');
+const cvv = document.querySelector('#cvv');
+
+const ccHint = document.querySelector('#cc-hint');
+const zipHint = document.querySelector('#zip-hint');
+const cvvHint = document.querySelector('#cvv-hint');
+
+const ccValidator = () => {
+    // const ccNumValue = ccNum.value;
+    // console.log("CC Num:", ccNumValue);
+
+    // const zipCodeValue = zipCode.value;
+    // console.log("Zip Code:", zipCodeValue);
+
+    // const cvvValue = cvv.value;
+    // console.log("CVV:", cvvValue)
+
+    // const ccNumIsValid = /\b\d{13,16}\b/.test(ccNumValue);
+    // const zipCodeIsValid = /^\d{5}$/.test(zipCodeValue);
+    // const cvvIsValid = /^\d{3}$/.test(cvvValue);
+
+    // if (!ccNumisValid){
+        
+    // }
+
+    let ccIsValid = false;
+
+    if (ccNum.value.length > 13 && ccNum.value.length < 16) {
+        ccIsValid = true;
+    } else {
+        ccIsValid = false;
+        console.log("CC Num must be 13-16 digits")
+    }
+
+    if (zipCode.value.length !== 5) {
+        ccIsValid = false;
+        console.log("Zip Code must be 5 digits");
+    } else {
+        ccIsValid = true
+    }
+
+    if (cvv.value.length !== 3) {
+        ccIsValid = false;
+        console.log("CVV must be 3 digits")
+    } else {
+        ccIsValid = true;
+    }
+
+    return ccIsValid;
+
+}
+
+form.addEventListener('submit', e => {
+    
+e.preventDefault();
+    if (!nameValidator()){e.preventDefault()};
+    if (!emailValidator()){e.preventDefault()};
+    if (!activityValidator()){e.preventDefault()};
+    if (!ccValidator()){e.preventDefault()};
+    console.log('Submit handler is functional!');
+
+    if (payment === "credit-card") {
+
+    }
+
+})
